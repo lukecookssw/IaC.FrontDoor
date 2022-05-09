@@ -68,11 +68,11 @@ resource profiles_lc_frontdoor_name_default_origin_group_default_origin 'Microso
   parent: profiles_lc_frontdoor_name_default_origin_group
   name: 'default-origin'
   properties: {
-    hostName: 'staticstorage1.z26.web.{environment().suffixes.storage}'
+    hostName: 'staticstorage1.z26.web.${environment().suffixes.storage}'
     //hostName: 'staticstorage1.z26.web.core.windows.net'
     httpPort: 80
     httpsPort: 443
-    originHostHeader: 'staticstorage1.z26.web.{environment().suffixes.storage}'
+    originHostHeader: 'staticstorage1.z26.web.${environment().suffixes.storage}'
     //originHostHeader: 'staticstorage1.z26.web.core.windows.net'
     priority: 1
     weight: 1000
