@@ -12,6 +12,8 @@ resource profiles_lc_frontdoor_name_resource 'Microsoft.Cdn/profiles@2021-06-01'
   }
 }
 
+output profileName string = profiles_lc_frontdoor_name_resource.name
+
 resource profiles_lc_frontdoor_name_lcfrontdoorendpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
   parent: profiles_lc_frontdoor_name_resource
   name: 'lcfrontdoorendpoint'

@@ -23,7 +23,7 @@ jobs:
       id: depAz
       with:
         resourceGroupName: lc-test-webapp-rg
-        template: ./.azure/frontdoor.bicep
+        template: ./.azure/main.bicep
 
     # Log out when finished
     - name: logout
