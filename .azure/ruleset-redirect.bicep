@@ -6,6 +6,7 @@ param url_path string
 param redirect_path string
 
 var lowercase_url = toLower(url_path)
+var lowercase_redirect = toLower((redirect_path))
 
 resource parent 'Microsoft.Cdn/profiles@2021-06-01' existing = {
   name: frontdoor_name
@@ -44,7 +45,7 @@ resource redirect_rule 'Microsoft.Cdn/profiles/rulesets/rules@2021-06-01' = {
           typeName: 'DeliveryRuleUrlRedirectActionParameters'
           redirectType: 'Moved'
           destinationProtocol: 'MatchRequest'
-          customPath: redirect_path
+          customPath: lowercase_redirect
         }
       }
     ]

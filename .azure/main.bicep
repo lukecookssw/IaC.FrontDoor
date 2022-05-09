@@ -68,15 +68,12 @@ module legacy_site_origin_group './origin-group.bicep' = {
 
 // --- RULESETS ---
 // Consulting ruleset
-module consulting_redirect_ruleset './ruleset.bicep' = {
-  name: 'consulting-ruleset'
+module redirect_ruleset './ruleset.bicep' = {
+  name: 'redirect-ruleset'
   params: {
     frontdoor_name: frontdoor_name
-    ruleset_name: 'ConsultingRedirects'
+    ruleset_name: 'RedirectsToStatic'
   }
-  dependsOn: [ 
-    static_site_origin_group
-  ]
 }
 
 
@@ -88,14 +85,14 @@ module static_site_routes './routes.bicep' = {
     origin_group_id: static_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
     origin_path: '/*'
-    ruleset_id: consulting_redirect_ruleset.outputs.out_ruleset_id
+    // ruleset_id: redirect_ruleset.outputs.out_ruleset_id
     route_name: 'gatsby-routes'
     accepted_routes: [
       '/*'
     ]
   }
   dependsOn: [
-    consulting_redirect_ruleset
+    redirect_ruleset
   ]
 }
 
@@ -106,7 +103,7 @@ module legacy_site_routes './routes.bicep' = {
     origin_group_id: legacy_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
     origin_path: '/ssw'
-    ruleset_id: consulting_redirect_ruleset.outputs.out_ruleset_id
+    ruleset_id: redirect_ruleset.outputs.out_ruleset_id
     route_name: 'legacy-routes'
     accepted_routes: [
       '/ssw'
@@ -114,7 +111,7 @@ module legacy_site_routes './routes.bicep' = {
     ]
   }
   dependsOn: [
-    consulting_redirect_ruleset
+    redirect_ruleset
   ]
 }
 
@@ -125,8 +122,8 @@ module redirects './ruleset-redirect.bicep' = [for (item, index) in redirectsArr
   params: {
     frontdoor_name: frontdoor_name
     redirect_name: item.name
-    order: index
-    parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
+    order: (index +1)
+    parent_ruleset_name: redirect_ruleset.outputs.out_ruleset_name
     url_path: item.requestPath
     redirect_path: item.redirectPath
   }
