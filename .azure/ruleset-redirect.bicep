@@ -1,5 +1,6 @@
 param frontdoor_name string
 param parent_ruleset_name string
+param order int
 param redirect_name string
 param url_path string
 param redirect_path string
@@ -19,7 +20,7 @@ resource redirect_rule 'Microsoft.Cdn/profiles/rulesets/rules@2021-06-01' = {
   parent: ruleset
   name: redirect_name
   properties: {
-    order: 0
+    order: order
     conditions: [
       {
         name: 'UrlPath'

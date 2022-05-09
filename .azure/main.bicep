@@ -91,6 +91,7 @@ module angular_redirect './ruleset-redirect.bicep' = {
   params: {
     frontdoor_name: frontdoor_name
     redirect_name: 'Angular'
+    order: 0
     parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
     url_path: 'ssw/consulting/angular.aspx'
     redirect_path: '/consulting/angular'
@@ -104,6 +105,7 @@ module react_redirect './ruleset-redirect.bicep' = {
   params: {
     frontdoor_name: frontdoor_name
     redirect_name: 'React'
+    order: 1
     parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
     url_path: 'ssw/consulting/react.aspx'
     redirect_path: '/consulting/react'
