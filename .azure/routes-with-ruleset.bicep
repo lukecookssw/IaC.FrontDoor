@@ -16,7 +16,7 @@ resource endpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' existing = {
   name: endpoint_name
 }
 
-resource routes_with_ruleset 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = {
+resource routes 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = {
   parent: endpoint
   name: route_name
   properties: {
@@ -41,25 +41,3 @@ resource routes_with_ruleset 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06
     enabledState: 'Enabled'
   }
 }
-
-resource routes_without_ruleset 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = if(empty(ruleset_id)) {
-  parent: endpoint
-  name: route_name
-  properties: {
-    customDomains: []
-    originGroup: {
-      id: origin_group_id
-    }
-    originPath: origin_path
-    supportedProtocols: [
-      'Http'
-      'Https'
-    ]
-    patternsToMatch: accepted_routes
-    forwardingProtocol: 'MatchRequest'
-    linkToDefaultDomain: 'Enabled'
-    httpsRedirect: 'Enabled'
-    enabledState: 'Enabled'
-  }
-}
-
