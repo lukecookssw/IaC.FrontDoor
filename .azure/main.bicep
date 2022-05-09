@@ -1,5 +1,19 @@
 param frontdoor_name string = 'LC-AFD'
 param frontdoor_endpoint_name string = 'LC-frontdoor-endpoint'
+
+var redirectsArray = [
+  {
+    name: 'angular'
+    requestPath: 'ssw/consulting/angular.aspx'
+    redirectPath: '/consulting/angular'
+  }
+  {
+    name: 'react'
+    requestPath: 'ssw/consulting/react.aspx'
+    redirectPath: '/consulting/react'
+  }
+]
+
 // create frontdoor
 resource frontdoor 'Microsoft.Cdn/profiles@2021-06-01' = {
   name: frontdoor_name
@@ -105,34 +119,47 @@ module legacy_site_routes './routes.bicep' = {
 }
 
 // --- RULES ---
+
+module redirects './ruleset-redirect.bicep' = [for (item, index) in redirectsArray: {
+  name: item.name
+  params: {
+    frontdoor_name: frontdoor_name
+    redirect_name: item.name
+    order: index
+    parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
+    url_path: item.requestPath
+    redirect_path: item.redirectPath
+  }
+}]
+
 // Consulting redirect rules
-module angular_redirect './ruleset-redirect.bicep' = {
-  name: 'angular'
-  params: {
-    frontdoor_name: frontdoor_name
-    redirect_name: 'Angular'
-    order: 0
-    parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
-    url_path: 'ssw/consulting/angular.aspx'
-    redirect_path: '/consulting/angular'
-  }
-  dependsOn: [
-    consulting_redirect_ruleset
-  ]
-}
-module react_redirect './ruleset-redirect.bicep' = {
-  name: 'react'
-  params: {
-    frontdoor_name: frontdoor_name
-    redirect_name: 'React'
-    order: 1
-    parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
-    url_path: 'ssw/consulting/react.aspx'
-    redirect_path: '/consulting/react'
-  }
-  dependsOn: [
-    consulting_redirect_ruleset
-  ]
-}
+// module angular_redirect './ruleset-redirect.bicep' = {
+//   name: 'angular'
+//   params: {
+//     frontdoor_name: frontdoor_name
+//     redirect_name: 'Angular'
+//     order: 0
+//     parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
+//     url_path: 'ssw/consulting/angular.aspx'
+//     redirect_path: '/consulting/angular'
+//   }
+//   dependsOn: [
+//     consulting_redirect_ruleset
+//   ]
+// }
+// module react_redirect './ruleset-redirect.bicep' = {
+//   name: 'react'
+//   params: {
+//     frontdoor_name: frontdoor_name
+//     redirect_name: 'React'
+//     order: 1
+//     parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
+//     url_path: 'ssw/consulting/react.aspx'
+//     redirect_path: '/consulting/react'
+//   }
+//   dependsOn: [
+//     consulting_redirect_ruleset
+//   ]
+// }
 
 

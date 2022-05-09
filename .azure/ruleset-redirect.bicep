@@ -50,7 +50,4 @@ resource redirect_rule 'Microsoft.Cdn/profiles/rulesets/rules@2021-06-01' = {
     ]
     matchProcessingBehavior: 'Stop'
   }
-  dependsOn: [
-    //profiles_lc_frontdoor_name_resource
-  ]
 }
