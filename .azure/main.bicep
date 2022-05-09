@@ -81,25 +81,21 @@ module redirect_ruleset './ruleset.bicep' = {
 
 
 // --- ROUTES ---
-module static_site_routes './routes.bicep' = {
+module static_site_routes './routes-without-ruleset.bicep' = {
   name: 'static-site-routes'
   params: {
     frontdoor_name: frontdoor_name
     origin_group_id: static_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
     origin_path: '/*'
-    // ruleset_id: redirect_ruleset.outputs.out_ruleset_id
     route_name: 'gatsby-routes'
     accepted_routes: [
       '/*'
     ]
   }
-  dependsOn: [
-    redirect_ruleset
-  ]
 }
 
-module legacy_site_routes './routes.bicep' = {
+module legacy_site_routes './routes-with-ruleset.bicep' = {
   name: 'legacy-site-routes'
   params: {
     frontdoor_name: frontdoor_name
