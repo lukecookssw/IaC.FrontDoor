@@ -74,6 +74,9 @@ module redirect_ruleset './ruleset.bicep' = {
     frontdoor_name: frontdoor_name
     ruleset_name: 'RedirectsToStatic'
   }
+  dependsOn: [
+    frontdoor
+  ]
 }
 
 
