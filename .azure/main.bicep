@@ -65,6 +65,7 @@ module consulting_redirect_ruleset './ruleset.bicep' = {
   ]
 }
 
+
 // --- ROUTES ---
 module static_site_routes './routes.bicep' = {
   name: 'static-site-routes'

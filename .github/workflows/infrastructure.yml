@@ -24,6 +24,8 @@ jobs:
       with:
         resourceGroupName: lc-test-webapp-rg
         template: ./.azure/main.bicep
+        parameters: 
+            frontdoor_name: 'lc-frontdoor'
 
     # Log out when finished
     - name: logout
