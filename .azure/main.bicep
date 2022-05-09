@@ -1,6 +1,5 @@
-param frontdoor_name string
-param frontdoor_endpoint_name string
-
+param frontdoor_name string = 'LC-AFD'
+param frontdoor_endpoint_name string = 'LC-frontdoor-endpoint'
 // create frontdoor
 resource frontdoor 'Microsoft.Cdn/profiles@2021-06-01' = {
   name: frontdoor_name
@@ -74,7 +73,7 @@ module static_site_routes './routes.bicep' = {
     origin_group_id: static_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
     origin_path: '/'
-    ruleset_id: consulting_redirect_ruleset.outputs.ruleset_id
+    ruleset_id: consulting_redirect_ruleset.outputs.out_ruleset_id
     accepted_routes: [
       '/*'
     ]
@@ -90,7 +89,7 @@ module angular_redirect './ruleset-redirect.bicep' = {
   name: 'angular'
   params: {
     redirect_name: 'Angular'
-    parent_ruleset_name: consulting_redirect_ruleset.outputs.ruleset_name
+    parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
     url_path: 'ssw/consulting/angular.aspx'
     redirect_path: '/consulting/angular'
   }
@@ -102,7 +101,7 @@ module react_redirect './ruleset-redirect.bicep' = {
   name: 'react'
   params: {
     redirect_name: 'React'
-    parent_ruleset_name: consulting_redirect_ruleset.outputs.ruleset_name
+    parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
     url_path: 'ssw/consulting/react.aspx'
     redirect_path: '/consulting/react'
   }

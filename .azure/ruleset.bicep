@@ -10,6 +10,6 @@ resource ruleset 'Microsoft.Cdn/profiles/rulesets@2021-06-01' = {
   name: ruleset_name
 }
 
-output ruleset_name string = ruleset.name
-output ruleset_id string = ruleset.id
+output out_ruleset_name string = ruleset.name
+output out_ruleset_id string = ruleset.id
 
