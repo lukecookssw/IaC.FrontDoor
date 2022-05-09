@@ -3,6 +3,7 @@ param endpoint_name string
 param origin_group_id string
 param ruleset_id string
 param origin_path string
+param route_name string
 param accepted_routes array
 
 
@@ -17,7 +18,7 @@ resource endpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' existing = {
 
 resource routes 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = {
   parent: endpoint
-  name: 'WebAppRoutes'
+  name: route_name
   properties: {
     customDomains: []
     originGroup: {

@@ -73,10 +73,30 @@ module static_site_routes './routes.bicep' = {
     frontdoor_name: frontdoor_name
     origin_group_id: static_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
-    origin_path: '/'
+    origin_path: '/*'
     ruleset_id: consulting_redirect_ruleset.outputs.out_ruleset_id
+    route_name: 'gatsby-routes'
     accepted_routes: [
       '/*'
+    ]
+  }
+  dependsOn: [
+    consulting_redirect_ruleset
+  ]
+}
+
+module legacy_site_routes './routes.bicep' = {
+  name: 'legacy-site-routes'
+  params: {
+    frontdoor_name: frontdoor_name
+    origin_group_id: legacy_site_origin_group.outputs.origin_group_id
+    endpoint_name: frontdoor_endpoint_name
+    origin_path: '/'
+    ruleset_id: consulting_redirect_ruleset.outputs.out_ruleset_id
+    route_name: 'legacy-routes'
+    accepted_routes: [
+      '/ssw'
+      '/ssw/*'
     ]
   }
   dependsOn: [
