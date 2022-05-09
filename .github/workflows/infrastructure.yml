@@ -1,0 +1,32 @@
+name: IaC
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+
+    steps:      
+    - uses: actions/checkout@v2
+
+    # Log into Azure
+    - name: Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # Create Azure infrastructure
+    - name: Create Deployment Group
+      uses: azure/arm-deploy@v1
+      id: depAz
+      with:
+        resourceGroupName: lc-test-webapp-rg
+        template: ./.azure/frontdoor.bicep
+
+    # Log out when finished
+    - name: logout
+      run: |
+            az logout
+      if: always()
