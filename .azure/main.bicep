@@ -1,4 +1,5 @@
 param frontdoor_name string
+param frontdoor_endpoint_name string
 
 // create frontdoor
 resource frontdoor 'Microsoft.Cdn/profiles@2021-06-01' = {
@@ -15,7 +16,7 @@ resource frontdoor 'Microsoft.Cdn/profiles@2021-06-01' = {
 // set endpoint of frontdoor
 resource frontdoor_endpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
   parent: frontdoor
-  name: 'sswfrontdoor'
+  name: frontdoor_endpoint_name
   location: 'Global'
   properties: {
     enabledState: 'Enabled'
@@ -71,7 +72,7 @@ module static_site_routes './routes.bicep' = {
   name: 'static-site-routes'
   params: {
     origin_group_id: static_site_origin_group.outputs.origin_group_id
-    endpoint_name: frontdoor_endpoint.name
+    endpoint_name: frontdoor_endpoint_name
     origin_path: '/'
     ruleset_id: consulting_redirect_ruleset.outputs.ruleset_id
     accepted_routes: [
