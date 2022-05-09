@@ -70,6 +70,7 @@ module consulting_redirect_ruleset './ruleset.bicep' = {
 module static_site_routes './routes.bicep' = {
   name: 'static-site-routes'
   params: {
+    frontdoor_name: frontdoor_name
     origin_group_id: static_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
     origin_path: '/'
