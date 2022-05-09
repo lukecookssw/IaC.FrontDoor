@@ -89,6 +89,7 @@ module static_site_routes './routes.bicep' = {
 module angular_redirect './ruleset-redirect.bicep' = {
   name: 'angular'
   params: {
+    frontdoor_name: frontdoor_name
     redirect_name: 'Angular'
     parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
     url_path: 'ssw/consulting/angular.aspx'
@@ -101,6 +102,7 @@ module angular_redirect './ruleset-redirect.bicep' = {
 module react_redirect './ruleset-redirect.bicep' = {
   name: 'react'
   params: {
+    frontdoor_name: frontdoor_name
     redirect_name: 'React'
     parent_ruleset_name: consulting_redirect_ruleset.outputs.out_ruleset_name
     url_path: 'ssw/consulting/react.aspx'

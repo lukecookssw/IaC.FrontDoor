@@ -1,3 +1,4 @@
+param frontdoor_name string
 param parent_ruleset_name string
 param redirect_name string
 param url_path string
@@ -5,7 +6,12 @@ param redirect_path string
 
 var lowercase_url = toLower(url_path)
 
+resource parent 'Microsoft.Cdn/profiles@2021-06-01' existing = {
+  name: frontdoor_name
+}
+
 resource ruleset 'Microsoft.Cdn/profiles/rulesets@2021-06-01' existing = {
+  parent: parent
   name: parent_ruleset_name
 }
 
