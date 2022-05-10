@@ -24,7 +24,7 @@ jobs:
       with:
         resourceGroupName: lc-test-webapp-rg
         template: ./.azure/main.bicep
-        parameters: .github/workflows/redirects.json frontdoor_name=lc-frontdoor-test frontdoor_endpoint_name=LC-frontdoor-endpoint-test
+        parameters: redirects.json frontdoor_name=${{ secrets.FRONTDOOR_NAME }} frontdoor_endpoint_name=${{ secrets.FRONTDOOR_ENDPOINT_NAME }}
     # Log out when finished
     - name: logout
       run: |
