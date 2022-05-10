@@ -12,4 +12,3 @@ resource ruleset 'Microsoft.Cdn/profiles/rulesets@2021-06-01' = {
 
 output out_ruleset_name string = ruleset.name
 output out_ruleset_id string = ruleset.id
-

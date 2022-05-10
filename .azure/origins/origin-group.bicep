@@ -31,19 +31,14 @@ resource origin 'Microsoft.Cdn/profiles/origingroups/origins@2021-06-01' = {
   name: origin_name
   properties: {
     hostName: hostname
-    //hostName: 'staticstorage1.z26.web.core.windows.net'
     httpPort: 80
     httpsPort: 443
     originHostHeader: hostname
-    //originHostHeader: 'staticstorage1.z26.web.core.windows.net'
     priority: 1
     weight: 1000
     enabledState: 'Enabled'
     enforceCertificateNameCheck: true
   }
-  dependsOn: [
-    //profiles_lc_frontdoor_name_resource
-  ]
 }
 
 output origin_group_id string = origin_group.id

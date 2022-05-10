@@ -1,18 +1,19 @@
-param frontdoor_name string = 'LC-AFD'
-param frontdoor_endpoint_name string = 'LC-frontdoor-endpoint'
+param frontdoor_name string
+param frontdoor_endpoint_name string
+param redirectsArray array
 
-var redirectsArray = [
-  {
-    name: 'angular'
-    requestPath: 'ssw/consulting/angular.aspx'
-    redirectPath: '/consulting/angular'
-  }
-  {
-    name: 'react'
-    requestPath: 'ssw/consulting/react.aspx'
-    redirectPath: '/consulting/react'
-  }
-]
+// var redirectsArray = [
+//   {
+//     name: 'angular'
+//     requestPath: 'ssw/consulting/angular.aspx'
+//     redirectPath: '/consulting/angular'
+//   }
+//   {
+//     name: 'react'
+//     requestPath: 'ssw/consulting/react.aspx'
+//     redirectPath: '/consulting/react'
+//   }
+// ]
 
 // create frontdoor
 resource frontdoor 'Microsoft.Cdn/profiles@2021-06-01' = {
@@ -23,6 +24,12 @@ resource frontdoor 'Microsoft.Cdn/profiles@2021-06-01' = {
   }
   properties: {
     originResponseTimeoutSeconds: 60
+  }
+  tags: {
+    CreatedBy: 'Warwick Leahy'
+    owner: 'Piers Sinclair'
+    Description: 'SSW web projects staging environment'
+    AzDevOpsProjectName: 'SSW.Website + SSW.Rules + SSW.People + SSW.Website (legacy)'
   }
 }
 
@@ -38,7 +45,7 @@ resource frontdoor_endpoint 'Microsoft.Cdn/profiles/afdendpoints@2021-06-01' = {
 
 // --- ORIGINS ---
 // SSW Gatsby website
-module static_site_origin_group './origin-group.bicep' = {
+module static_site_origin_group './origins/origin-group.bicep' = {
   name: 'static-site-origin-group'
   params: {
     frontdoor_name: frontdoor_name
@@ -52,7 +59,7 @@ module static_site_origin_group './origin-group.bicep' = {
 }
 
 // App Service SSW website (Legacy)
-module legacy_site_origin_group './origin-group.bicep' = {
+module legacy_site_origin_group './origins/origin-group.bicep' = {
   name: 'legacy-site-origin-group'
   params: {
     frontdoor_name: frontdoor_name
@@ -66,9 +73,23 @@ module legacy_site_origin_group './origin-group.bicep' = {
   ]
 }
 
+// SSW People
+// module people_origin_group './origins/origin-group.bicep' = {
+//   name: 'ssw-people-staging'
+//   params: {
+//     frontdoor_name: frontdoor_name
+//     origin_name: 'ssw-people-origin'
+//     hostname: 'lc-ssw-webformsapp.azurewebsites.net'
+//   }
+//   dependsOn: [
+//     frontdoor
+//     frontdoor_endpoint
+//   ]
+// }
+
 // --- RULESETS ---
 // Consulting ruleset
-module redirect_ruleset './ruleset.bicep' = {
+module redirect_ruleset './rulesets/ruleset.bicep' = {
   name: 'redirect-ruleset'
   params: {
     frontdoor_name: frontdoor_name
@@ -81,13 +102,13 @@ module redirect_ruleset './ruleset.bicep' = {
 
 
 // --- ROUTES ---
-module static_site_routes './routes-without-ruleset.bicep' = {
+module static_site_routes './routes/routes-without-ruleset.bicep' = {
   name: 'static-site-routes'
   params: {
     frontdoor_name: frontdoor_name
     origin_group_id: static_site_origin_group.outputs.origin_group_id
     endpoint_name: frontdoor_endpoint_name
-    origin_path: '/*'
+    origin_path: '/'
     route_name: 'gatsby-routes'
     accepted_routes: [
       '/*'
@@ -95,7 +116,7 @@ module static_site_routes './routes-without-ruleset.bicep' = {
   }
 }
 
-module legacy_site_routes './routes-with-ruleset.bicep' = {
+module legacy_site_routes './routes/routes-with-ruleset.bicep' = {
   name: 'legacy-site-routes'
   params: {
     frontdoor_name: frontdoor_name
@@ -114,9 +135,24 @@ module legacy_site_routes './routes-with-ruleset.bicep' = {
   ]
 }
 
-// --- RULES ---
+// module people_site_routes './routes/routes-without-ruleset.bicep' = {
+//   name: 'people-routes'
+//   params: {
+//     frontdoor_name: frontdoor_name
+//     origin_group_id: people_origin_group.outputs.origin_group_id
+//     endpoint_name: frontdoor_endpoint_name
+//     origin_path: '/'
+//     route_name: 'gatsby-routes'
+//     accepted_routes: [
+//       '/people'
+//       '/people/*'
+//     ]
+//   }
+// }
 
-module redirects './ruleset-redirect.bicep' = [for (item, index) in redirectsArray: {
+// --- REDIRECT RULES ---
+
+module redirects './rulesets/rule-redirect.bicep' = [for (item, index) in redirectsArray: {
   name: item.name
   params: {
     frontdoor_name: frontdoor_name

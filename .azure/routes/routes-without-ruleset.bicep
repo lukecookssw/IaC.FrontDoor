@@ -35,4 +35,3 @@ resource routes 'Microsoft.Cdn/profiles/afdendpoints/routes@2021-06-01' = {
     enabledState: 'Enabled'
   }
 }
-
